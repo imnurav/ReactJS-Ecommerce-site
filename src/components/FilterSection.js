@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { useFilterContext } from "../context/filter_context";
 import { Button } from "../styles/Button";
-
+import { FaCheck } from "react-icons/fa";
+import FormatPrice from "../Helpers/FormatPrice";
 const FilterSection = () => {
   const {
-    filters: { text, category, company, color },
+    filters: { text, category, company, color, price, maxPrice, minPrice },
     updateFiltersValue,
     clearFilters,
     all_products,
@@ -23,7 +24,7 @@ const FilterSection = () => {
 
   // Here we need to get the unique property values based on the 2nd argument respective in an array so that we can use map and display on page
   const categories = uniqueValues(all_products, "category");
-  console.log(typeof categories);
+  // console.log(typeof categories);
   const companyData = uniqueValues(all_products, "company");
   const colorsData = uniqueValues(all_products, "colors");
 
@@ -96,6 +97,21 @@ const FilterSection = () => {
 
         <div className="filter-color-style">
           {colorsData.map((curColor, index) => {
+            if (curColor === "All") {
+              return (
+                <button
+                  key={index}
+                  type="button"
+                  value={curColor}
+                  name="color"
+                  // style={{ backgroundColor: curColor }}
+                  className="color-all--style"
+                  onClick={updateFiltersValue}
+                >
+                  All
+                </button>
+              );
+            }
             return (
               <button
                 key={index}
@@ -103,15 +119,31 @@ const FilterSection = () => {
                 value={curColor}
                 name="color"
                 style={{ backgroundColor: curColor }}
-                className="btnStyle"
+                className={color === curColor ? "btnStyle active" : "btnStyle"}
                 onClick={updateFiltersValue}
               >
-                {color === curColor ? "" : null}
+                {color === curColor ? <FaCheck className="checkStyle" /> : null}
               </button>
             );
           })}
         </div>
       </div>
+
+      <div className="filter_price">
+        <h3>Price</h3>
+        <p>
+          <FormatPrice price={price} />
+        </p>
+        <input
+          type="range"
+          name="price"
+          min={minPrice}
+          max={maxPrice}
+          value={price}
+          onChange={updateFiltersValue}
+        />
+      </div>
+
       <div className="filter-clear">
         <Button className="btn" onClick={clearFilters}>
           Clear Filters

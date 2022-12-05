@@ -15,15 +15,20 @@ const initialState = {
     category: "All",
     company: "All",
     color: "All",
+    maxPrice: 0,
+    price: 0,
+    minPrice: 0,
   },
 };
 export const FilterContextProvider = ({ children }) => {
   const { products } = useProductContext();
   // console.log("Filter COntext : ",products);
   const [state, dispatch] = useReducer(reducer, initialState);
+
   const setGridView = () => {
     return dispatch({ type: "SET_GRID_VIEW" });
   };
+
   const setListView = () => {
     return dispatch({ type: "SET_LIST_VIEW" });
   };
@@ -39,6 +44,11 @@ export const FilterContextProvider = ({ children }) => {
     let value = event.target.value;
     dispatch({ type: "UPDATE_FILTERS_VALUE", payload: { name, value } });
   };
+
+  const clearFilters = () => {
+    dispatch({ type: "CLEAR_FILTERS" });
+  };
+
   useEffect(() => {
     dispatch({ type: "FILTER_PRODUCTS" });
     dispatch({ type: "SORTING_PRODUCTS" });
@@ -56,6 +66,7 @@ export const FilterContextProvider = ({ children }) => {
         setListView,
         sorting,
         updateFiltersValue,
+        clearFilters,
       }}
     >
       {children}
